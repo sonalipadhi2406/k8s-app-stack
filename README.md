@@ -3,23 +3,23 @@
 This project deploys a complete internal Kubernetes application stack using Helm, featuring a Golang monitoring app, MySQL database, and Nginx web server with secure networking, pod scheduling, and disaster recovery configurations.
 
 ## As per the tasks, I have created the following items:
-Kubernetes cluster (Kind multi-node)
-DB cluster with persistent data (MySQL StatefulSet with PVCs, 2 replicas)
-Web Server (Nginx) with conditions
-1 Multiple replicas 
-2 Accessible from browser 
-3 Custom config mounted (ConfigMap → nginx.conf)
-4 Page shows Pod IP + serving-host from init container
-Only allows web pods to connect to DB on 3306; deny others
-Added DB disaster recovery
-Flexible way to connect a Pod to a new network (Calico secondary IP pool + “external-net-test” pod routing; service still ClusterIP/NodePort)
-Schedule specific DB replicas on specific nodes(node labels + StatefulSet affinity/nodeSelectorTerms)
+- Kubernetes cluster (Kind multi-node)
+- DB cluster with persistent data (MySQL StatefulSet with PVCs, 2 replicas)
+- Web Server (Nginx) with conditions
+1. Multiple replicas
+2. Accessible from browser
+3. Custom config mounted (ConfigMap → nginx.conf)
+4. Page shows Pod IP + serving-host from init container
+- Only allows web pods to connect to DB on 3306; deny others
+- Added DB disaster recovery
+- Flexible way to connect a Pod to a new network (Calico secondary IP pool + “external-net-test” pod routing; service still ClusterIP/NodePort)
+- Schedule specific DB replicas on specific nodes(node labels + StatefulSet affinity/nodeSelectorTerms)
 
 ## Golang application
 Golang app that logs Pod create/delete/update(client-go informer; InClusterConfig; RBAC)
 Used Helm to deploy all components (one parent chart + subcharts)
- 
----
+
+--
 
 ## Requirements
 - Docker (latest)
@@ -28,11 +28,9 @@ Used Helm to deploy all components (one parent chart + subcharts)
 - Helm ≥ 3.14
 - make 
 
----
-
 ## Setup & Deployment Steps
-```bash
 NOTE: Use Helm to deploy all components
+```bash
 
 1. Create Kind Cluster
 
@@ -79,9 +77,8 @@ Golang app that logs Pod create/delete/update
 kubectl get pods -n app-stack -l app=pod-watcher
 kubectl logs -n app-stack -l app=pod-watcher
 
----
 
-# Trigger events
+## Trigger events
 kubectl delete pod -n app-stack -l app=webserver
 kubectl logs -n app-stack -l app=pod-watcher
 
