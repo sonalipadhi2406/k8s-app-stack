@@ -15,11 +15,11 @@ spec:
       labels:
         app: {{ include "mysql.name" . }}
     spec:
-      # 🔒 Security Context for file permissions
+      # Security Context for file permissions
       securityContext:
         fsGroup: 999
 
-      # 🧭 Node Affinity (scheduling MySQL pods to specific nodes)
+      # Node Affinity (scheduling MySQL pods to specific nodes)
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
