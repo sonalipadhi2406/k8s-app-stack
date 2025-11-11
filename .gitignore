@@ -1,0 +1,9 @@
+# Ignore archive and binary files
+*.tar
+*.tar.gz
+*.zip
+
+# Ignore Kubernetes secret files if any
+*.key
+*.crt
+*.pem
