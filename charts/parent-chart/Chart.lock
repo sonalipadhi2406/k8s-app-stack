@@ -1,0 +1,12 @@
+dependencies:
+- name: mysql
+  repository: file://charts/mysql
+  version: 0.1.0
+- name: webserver
+  repository: file://charts/webserver
+  version: 0.1.0
+- name: otel-collector
+  repository: file://charts/otel-collector
+  version: 0.1.0
+digest: sha256:13c6f47fe591371124895f0143856a1a541c2010ad0b259065a5b4b077d83bb4
+generated: "2025-11-11T16:54:14.905745791+05:30"

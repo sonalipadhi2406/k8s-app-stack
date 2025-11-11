@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "mysql.fullname" . }}-backup
+spec:
+  schedule: "{{ .Values.backup.schedule | default "0 2 * * *" }}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          volumes:
+            - name: backup
+              persistentVolumeClaim:
+                claimName: {{ include "mysql.fullname" . }}-backup-pvc
+          containers:
+            - name: mysqldump
+              image: mysql:8.0
+              env:
+                - name: MYSQL_PWD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "mysql.fullname" . }}-secret
+                      key: MYSQL_ROOT_PASSWORD
+              command:
+                - sh
+                - -c
+                - |
+                  TS=$(date +%F-%H%M%S)
+                  mysqldump -h {{ include "mysql.fullname" . }} -u root --all-databases > /backup/dump-$TS.sql
+                  ls -1 /backup | grep dump- | sort | head -n -7 | xargs -r rm -f
+              volumeMounts:
+                - name: backup
+                  mountPath: /backup
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "mysql.fullname" . }}-backup-pvc
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: {{ .Values.backup.storage | default "5Gi" }}

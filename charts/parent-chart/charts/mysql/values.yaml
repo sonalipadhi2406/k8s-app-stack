@@ -1,0 +1,15 @@
+replicaCount: 2
+
+image:
+  repository: mysql
+  tag: "8.0"
+  pullPolicy: IfNotPresent
+
+storage:
+  size: 5Gi
+
+backup:
+  schedule: "0 2 * * *"
+  storage: 5Gi
+
+rootPassword: cm9vdHBhc3MxMjM=  # base64 for 'rootpass123'

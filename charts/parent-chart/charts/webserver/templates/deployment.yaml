@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "webserver.fullname" . }}
+  labels:
+    app: {{ include "webserver.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount | default 3 }}
+  selector:
+    matchLabels:
+      app: {{ include "webserver.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "webserver.name" . }}
+    spec:
+      # Anti-Affinity to spread web pods across nodes
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ include "webserver.name" . }}
+                topologyKey: "kubernetes.io/hostname"
+
+      initContainers:
+        - name: init-web
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              echo "Pod IP: $(POD_IP)" > /workdir/index.html
+              echo "serving-host=Host-${POD_NAME: -5}" >> /workdir/index.html
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                  fieldRef:
+                    fieldPath: status.podIP
+          volumeMounts:
+            - name: web-content
+              mountPath: /workdir
+
+      containers:
+        - name: nginx
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: web-content
+              mountPath: /usr/share/nginx/html
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+      volumes:
+        - name: web-content
+          emptyDir: {}
+        - name: nginx-config
+          configMap:
+            name: {{ include "webserver.fullname" . }}-config

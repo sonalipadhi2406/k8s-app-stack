@@ -1,0 +1,5 @@
+apiVersion: v2
+name: pod-watcher
+version: 0.1.0
+description: Golang application for monitoring pod status
+appVersion: "1.0"
