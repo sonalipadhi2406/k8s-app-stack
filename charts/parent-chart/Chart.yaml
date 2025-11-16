@@ -1,6 +1,6 @@
 apiVersion: v2
 name: parent-chart
-description: Company internal K8s app stack (MySQL + NGINX + OTEL)
+description: internal K8s app stack
 type: application
 version: 0.1.0
 appVersion: "1.0.0"
