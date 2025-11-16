@@ -12,7 +12,4 @@ dependencies:
   - name: webserver
     version: 0.1.0
     repository: "file://charts/webserver"
-  - name: pod-watcher
-    version: 0.1.0
-    repository: "file://charts/pod-watcher"
 
