@@ -2,7 +2,7 @@
 
 This project deploys a complete internal Kubernetes application stack using Helm, featuring a Golang monitoring app, MySQL database, and Nginx web server with secure networking, pod scheduling, and disaster recovery configurations.
 
-## As per the tasks, I have created the following items:
+## I have created the following items:
 - Kubernetes cluster (Kind multi-node)
 - DB cluster with persistent data (MySQL StatefulSet with PVCs, 2 replicas)
 - Web Server (Nginx) with conditions
